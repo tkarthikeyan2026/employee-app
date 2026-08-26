@@ -1,3 +1,4 @@
 Flask
 mssql-python
 azure-identity
+gunicorn
