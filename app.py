@@ -18,11 +18,33 @@ def get_db_connection():
     return mssql_python.connect(connection_string)
 
 
+# Home page
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
+# Participants / Employees page
+@app.route("/employees")
+def employees():
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT EmployeeId, Name, Department, Email
+        FROM Employees
+    """)
+
+    employees = cursor.fetchall()
+
+    cursor.close()
+    connection.close()
+
+    return render_template("employees.html", employees=employees)
+
+
+# Add employee
 @app.route("/add", methods=["GET", "POST"])
 def add_employee():
 
