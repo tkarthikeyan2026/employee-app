@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import os
 import mssql_python
 
@@ -73,6 +73,29 @@ def add_employee():
         return "Employee added successfully!"
 
     return render_template("add_employee.html")
+
+
+# Delete employee
+@app.route("/delete/<int:id>")
+def delete_employee(id):
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM Employees
+        WHERE EmployeeId = ?
+        """,
+        (id,)
+    )
+
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    return redirect("/employees")
 
 
 if __name__ == "__main__":
